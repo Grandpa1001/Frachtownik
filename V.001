@@ -1,0 +1,219 @@
+
+Private Sub CheckBox1_Click()
+
+If CheckBox1.Value = True Then TextBox1.Locked = True
+
+If CheckBox1.Value = False Then
+End If
+
+End Sub
+
+Private Sub CommandButton1_Click()
+Odp = MsgBox("Czy napewno chcesz wyjść?", vbYesNo + vbQuestion, "Anulacja Frachtownika")
+If Odp = 6 Then ThisWorkbook.Close savechanges = False
+
+
+End Sub
+
+Private Sub CommandButton2_Click()
+
+ Range("A1:O9698").Select
+    Selection.Copy
+    Sheets("TEMP").Select
+    Range("A1:O9698").Select
+    Range("A1").Select
+    ActiveSheet.Paste
+    Range("R1").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=AVERAGE(C[-11])"
+    Range("R1").Select
+    Selection.NumberFormat = "0"
+    Range("R1").Select
+    Me.stawka.Value = Sheets("TEMP").Range("R1").Value
+    
+    
+    
+    
+End Sub
+
+Private Sub CommandButton3_Click()
+Selection.AutoFilter
+
+Me.kilometry.Value = 0
+Me.stawka.Value = 0
+Me.rodzajtrasy.Value = ""
+Selection.AutoFilter
+ 
+End Sub
+
+
+
+
+
+Private Sub CommandButton4_Click()
+Sheets("TEMP").Select
+    Range("A1:O500").Select
+    Range("F10").Activate
+    Selection.Copy
+    Sheets("Arkusz1").Select
+    ActiveSheet.Paste
+    Columns("A:A").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+    Columns("A:A").EntireColumn.AutoFit
+    Columns("B:B").ColumnWidth = 13.57
+    Columns("B:B").ColumnWidth = 11.86
+    Columns("C:C").EntireColumn.AutoFit
+    Columns("D:D").Select
+    Selection.NumberFormat = "m/d/yyyy"
+    Columns("E:E").EntireColumn.AutoFit
+    Columns("F:F").EntireColumn.AutoFit
+    Columns("G:G").EntireColumn.AutoFit
+    Columns("H:H").EntireColumn.AutoFit
+    Columns("H:H").ColumnWidth = 19.14
+    Columns("J:J").EntireColumn.AutoFit
+    Range("A1:N155").Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+End Sub
+
+
+Private Sub CommandButton5_Click()
+Sheets("Arkusz1").Select
+   Columns("A:AB").Select
+    Selection.Delete Shift:=xlToLeft
+End Sub
+
+Private Sub Image2_Click()
+
+
+MsgBox "Poniżej informacje odnosnie aktualizacji:" & vbNewLine & "v.00.1: Filtrowanie po miejscach paletowych" & vbNewLine & "v.00.2 : Filtrowanie po ilościach km oraz rodzaju trasy" & vbNewLine & "v.00.3 : Temp oraz infoBoxy" & vbNewLine & "v.00.4 : export do tabeli", , "Aktualizacje"
+
+
+
+End Sub
+
+Private Sub kilometry_Change()
+
+Dim kilo As Double
+kilo = kilometry.Value
+
+kilo1 = "<=" & kilo + 10
+kilo2 = ">=" & kilo - 10
+
+
+
+ Sheets("dane").Select
+ActiveSheet.Range("$A$1:$O$11813").AutoFilter Field:=12, Criteria1:=kilo1 _
+        , Operator:=xlAnd, Criteria2:=kilo2
+        
+
+
+End Sub
+
+
+
+
+
+Private Sub Label8_Click()
+MsgBox "Poniżej informacje odnosnie aktualizacji:" & vbNewLine & "v.00.1: Filtrowanie po miejscach paletowych" & vbNewLine & "v.00.2 : Filtrowanie po ilościach km oraz rodzaju trasy" & vbNewLine & "v.00.3 : Temp oraz infoBoxy" & vbNewLine & "v.00.4 : export do tabeli, kolory", , "Aktualizacje"
+
+End Sub
+
+Private Sub miejscp_Change()
+
+
+
+
+    If Me.miejscp.Value = "10-18" Then
+     ActiveSheet.Range("$A$1:$O$5159").AutoFilter Field:=10, Criteria1:="<18", _
+        Operator:=xlAnd, Criteria2:=">10"
+        End If
+    
+    If Me.miejscp.Value = "<10" Then
+    ActiveSheet.Range("$A$1:$O$5159").AutoFilter Field:=10, Criteria1:="<10", _
+        Operator:=xlAnd
+        End If
+        
+        If Me.miejscp.Value = ">18" Then
+    ActiveSheet.Range("$A$1:$O$5159").AutoFilter Field:=10, Criteria1:=">18", _
+        Operator:=xlAnd
+        End If
+            
+        
+        
+End Sub
+
+Private Sub stawka_Change()
+
+
+Sheets("TEMP").Range("R1").Value = Me.stawka.Value
+
+
+End Sub
+
+Private Sub UserForm_Activate()
+Me.stawka.Value = Sheets("TEMP").Range("R1").Value
+
+End Sub
+
+Private Sub UserForm_Initialize()
+  
+rodzajtrasy.List = Array("", "OTWARTA", "ZAMKNIĘTA")
+
+miejscp.List = Array("<10", "10-18", ">18")
+
+End Sub
+
+
+Private Sub rodzajtrasy_Change()
+
+ Sheets("dane").Select
+ Selection.AutoFilter
+    If Me.rodzajtrasy.Value = "OTWARTA" Then
+           ActiveSheet.Range("$A$1:$O$11813").AutoFilter Field:=8, Criteria1:= _
+        "OTWARTA"
+        
+        End If
+        
+    If Me.rodzajtrasy.Value = "ZAMKNIĘTA" Then
+           ActiveSheet.Range("$A$1:$O$11813").AutoFilter Field:=8, Criteria1:= _
+        "ZAMKNIĘTA"
+    End If
+End Sub
